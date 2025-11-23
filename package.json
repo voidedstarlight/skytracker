@@ -1,0 +1,18 @@
+{
+	"dependencies": {
+		"maplibre-gl": "^5.13.0"
+	},
+	"devDependencies": {
+		"@rspack/cli": "^1.5.8",
+		"@rspack/core": "^1.5.8",
+		"@tsconfig/recommended": "^1.0.10",
+		"@types/node": "^24.9.1"
+	},
+	"name": "opensky-viewer",
+	"license": "MIT",
+	"scripts": {
+		"dev": "rspack dev",
+		"build": "rspack build"
+	},
+	"version": "0.0.1"
+}

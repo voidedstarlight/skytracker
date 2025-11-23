@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"sourceMap": true
+	},
+	"extends": [
+		"@tsconfig/recommended/tsconfig.json"
+	],
+	"include": [ "src/**/*.ts" ]
+}
