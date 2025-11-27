@@ -9,6 +9,10 @@ export default {
 		css: true
 	},
 	externalsType: "commonjs",
+	devServer: {
+		hot: false,
+		liveReload: false,
+	},
 	module: {
 		rules: [
 			{

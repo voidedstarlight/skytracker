@@ -2,3 +2,8 @@
 	height: 100svh;
 	width: 100svw;
 }
+
+#map-canvas {
+	display: none;
+}
+
