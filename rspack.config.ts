@@ -16,6 +16,22 @@ export default {
 	module: {
 		rules: [
 			{
+				test: /\.css$/,
+				use: [
+					{
+						loader: "builtin:lightningcss-loader",
+						options: {
+							targets: ">0.5%"
+						}
+					}
+				],
+				type: "css/auto"
+			},
+			{
+				test: /\.svg$/,
+				type: "asset"
+			},
+			{
 				test: /\.ts$/,
 				exclude: [/node_modules/],
 				use: {
@@ -29,18 +45,6 @@ export default {
 						}
 					}
 				}
-			},
-			{
-				test: /\.css$/,
-				use: [
-					{
-						loader: "builtin:lightningcss-loader",
-						options: {
-							targets: ">0.5%"
-						}
-					}
-				],
-				type: "css/auto"
 			}
 		]
 	},

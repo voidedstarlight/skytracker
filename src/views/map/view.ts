@@ -1,114 +1,182 @@
+import getContent from "../../layout";
 import maplibregl from "maplibre-gl";
+import plane from "./plane.svg";
 
-function renderMap(container: HTMLElement) {
+interface PlaneState {
+	alert: int;
+	alt_baro: int;
+	alt_geom: int;
+	baro_rate: int;
+	category: string;
+	desc: string;
+	dir: float;
+	dst: float;
+	emergency: string;
+	flight: string;
+	gs: int;
+	gva: int;
+	hex: string;
+	lat: float;
+	lon: float;
+	messages: int;
+	mlat: Array<string>;
+	nac_p: int;
+	nac_v: int;
+	nav_altitude_mcp: int;
+	nav_qnh: float;
+	nic: int;
+	nic_baro: int;
+	ownOp: string;
+	r: string;
+	rc: int;
+	rssi: int;
+	sda: int;
+	seen: int;
+	seen_pos: float;
+	sil: int;
+	sil_type: string;
+	spi: int;
+	squawk: string;
+	t: string;
+	tisb: Array<string>;
+	track: int;
+	type: string;
+	version: int;
+	year: string;
+}
+
+const all_states: Record<string, PlaneState> = {};
+
+function createCanvas() {
+	const content = getContent();
+
+	const canvas = document.createElement("canvas");
+	content.appendChild(canvas);
+	canvas.id = "map-canvas";
+
+	return canvas;
+}
+
+function getCanvas() {
+	return document.getElementById("map-canvas") ?? createCanvas();
+}
+
+async function renderMap() {
 	void import("maplibre-gl/dist/maplibre-gl.css");
 	void import("./map.css");
 
+	const content = getContent();
+
+	const map_style = await import("./map.json");
+	
 	const map_container = document.createElement("div");
-	container.appendChild(map_container);
+	content.appendChild(map_container);
 	map_container.classList.add("map");
 
 	const map = new maplibregl.Map({
-		center: [280, 25],
+		center: [-90, 40],
 		container: map_container,
-		style: {
-			"layers": [
-				{
-					"id": "simple-tiles",
-					"type": "raster",
-					"source": "raster-tiles",
-					"attribution": "© OpenStreetMap contributors",
-				}
-			],
-			"projection": {
-				"type": "globe"
-			},
-			"sources": {
-				"raster-tiles": {
-					"type": "raster",
-					"tiles": ["https://server.arcgisonline.com/arcgis/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}"]
-				}
-			},
-			version: 8
-		},
-		zoom: 5.5
+		style: map_style,
+		zoom: 4
 	});
 
 	return map;
 }
 
-function renderStates(map: HTMLElement) {
-	map.on("move", async event => {
-		const zoom = map.getZoom();
-		if (zoom < 5.5) return;
+async function loadImage(src: string) {
+	const image = new Image();
 
-		const { _ne: ne, _sw: sw } = map.getBounds();
-
-		const lat_min = Math.min(ne.lat, sw.lat);
-		const lng_min = Math.min(ne.lng, sw.lng);
-
-		const lat_max = Math.max(ne.lat, sw.lat);
-		const lng_max = Math.max(ne.lng, sw.lng);
-
-		const request = await fetch(`https://opensky-network.org/api/states/all?lamin=${lat_min}&lomin=${lng_min}&lamax=${lat_max}&lomax=${lng_max}`);
-
-		let states = [];
-
-		try {
-			states = await request.json();
-		} catch (error) {
-			console.warn("[map/states] could not parse states data returned by opensky");
-		}
-
-		console.log(states);
+	const loaded = new Promise(resolve => {
+		image.addEventListener("load", () => resolve(image));
 	});
+
+	image.src = plane;
+
+	return loaded;
 }
 
-function updateCanvasSize() {
-	const canvas = document.getElementById("map-canvas");
-	canvas.height = window.innerHeight;
-	canvas.width = window.innerWidth;
-}
+function updateCanvas(map: maplibregl.Map) {
+	const { _ne: ne, _sw: sw } = map.getBounds();
 
-function mapView(main: HTMLElement) {
-	const map = renderMap(main);
-
-	const canvas = document.createElement("canvas");
-	main.appendChild(canvas);
-	canvas.id = "map-canvas";
-
-	window.addEventListener("resize", updateCanvasSize);
-	updateCanvasSize();
-
+	const canvas = getCanvas();
 	const ctx = canvas.getContext("2d");
-	ctx.beginPath();
-	ctx.arc(100, 100, 20, 0, Math.PI * 2, false);
-	ctx.strokeStyle = "#ff0";
-	ctx.stroke();
 
-	map.on("load", () => {
-		const { _ne: ne, _sw: sw } = map.getBounds();
+	const width = canvas.width;
+	const height = canvas.height;
 
-		map.addSource("canvas-source", {
-			animate: false,
-			canvas: "map-canvas",
-			coordinates: [
-				[ne.lng, ne.lat],
-				[ne.lng, sw.lat],
-				[sw.lng, ne.lat],
-				[sw.lng, sw.lat]
-			],
-			type: "canvas",
-		});
+	ctx.clearRect(0, 0, width, height);
 
-		map.addLayer({
-			id: "canvas-layer",
-			source: "canvas-source",
-			type: "raster"
-		});
+	const image = loadImage(plane);
+
+	Object.keys(all_states).forEach(async hex => {
+		const state = all_states[hex];
+		
+		if (sw.lng < state.lon && state.lon < ne.lng && sw.lat < state.lat && state.lat < ne.lat) {
+			const rel_lng = state.lon - sw.lng;
+
+			// latitudes increase upward, but canvas coordinates increase downward: max lat - plane's lat
+			const rel_lat = ne.lat - state.lat;
+
+			const lng_range = ne.lng - sw.lng;
+			const lat_range = ne.lat - sw.lat;
+
+			const pct_lng = rel_lng / lng_range;
+			const pct_lat = rel_lat / lat_range;
+
+			const x = pct_lng * width;
+			const y = pct_lat * height;
+
+			ctx.drawImage(await image, x, y, 50, 50);
+		}
+	});
+}
+
+function requestAnimation(map: maplibregl.Map) {
+	window.requestAnimationFrame(() => updateCanvas(map));
+}
+
+async function requestUpdate(map: maplibregl.Map) {
+	const { lat, lng  } = map.getCenter();
+	const request = await fetch(`https://api.airplanes.live/v2/point/${lat}/${lng}/250`);
+
+	let states: Array<PlaneState> = [];
+
+	try {
+		const response = await request.json();
+		states = response.ac;
+	} catch (error) {
+		console.warn("[map/states] could not parse states data returned by opensky");
+		return;
+	}
+
+	states.forEach(plane => {
+		all_states[plane.hex] = plane;
 	});
 
-	renderStates(map);
+	requestAnimation(map);
+}
+
+function resizeCanvas() {
+	const canvas = getCanvas();
+	canvas.height = window.innerHeight * 2;
+	canvas.width = window.innerWidth * 2;
+	canvas.style.height = `${window.innerHeight}px`;
+	canvas.style.width = `${window.innerWidth}px`;
+}
+
+function mapView() {
+	const content = getContent();
+
+	const canvas = getCanvas();
+	resizeCanvas(canvas);
+	window.addEventListener("resize", () => resizeCanvas(canvas));
+
+	renderMap().then(map => {
+		map.once("load", () => {
+			map.on("move", () => requestAnimation(map));
+		});
+		setTimeout(() => requestUpdate(map), 1000);
+	});
 }
 
 export default mapView;

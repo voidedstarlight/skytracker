@@ -8,7 +8,7 @@
 		"@tsconfig/recommended": "^1.0.10",
 		"@types/node": "^24.9.1"
 	},
-	"name": "opensky-viewer",
+	"name": "skytracker",
 	"license": "MIT",
 	"scripts": {
 		"dev": "rspack dev",

@@ -1,9 +1,14 @@
 .map {
 	height: 100svh;
 	width: 100svw;
+	z-index: 0;
 }
 
 #map-canvas {
-	display: none;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	z-index: 1;
 }
 
