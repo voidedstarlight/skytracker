@@ -126,8 +126,9 @@ function updateCanvas(map: maplibregl.Map) {
 			const x = pct_lng * width;
 			const y = pct_lat * height;
 
+			//state.track
 			ctx.drawImage(await image, x, y, 50, 50);
-		}
+		}	
 	});
 }
 
