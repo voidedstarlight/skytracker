@@ -1,4 +1,5 @@
 import getContent from "../../layout";
+import loadImages from "./svg.ts";
 import maplibregl from "maplibre-gl";
 import plane from "./plane.svg";
 
@@ -83,18 +84,6 @@ async function renderMap() {
 	return map;
 }
 
-async function loadImage(src: string) {
-	const image = new Image();
-
-	const loaded = new Promise(resolve => {
-		image.addEventListener("load", () => resolve(image));
-	});
-
-	image.src = plane;
-
-	return loaded;
-}
-
 function updateCanvas(map: maplibregl.Map) {
 	const { _ne: ne, _sw: sw } = map.getBounds();
 
@@ -106,7 +95,7 @@ function updateCanvas(map: maplibregl.Map) {
 
 	ctx.clearRect(0, 0, width, height);
 
-	const image = loadImage(plane);
+	const images = loadImages();
 
 	Object.keys(all_states).forEach(async hex => {
 		const state = all_states[hex];
@@ -126,8 +115,10 @@ function updateCanvas(map: maplibregl.Map) {
 			const x = pct_lng * width;
 			const y = pct_lat * height;
 
-			//state.track
-			ctx.drawImage(await image, x, y, 50, 50);
+			let track_rounded = Math.round(state.track / 10);
+			if (track_rounded === 36) track_rounded = 0
+
+			ctx.drawImage(await images.at(track_rounded), x, y, 50, 50);
 		}	
 	});
 }
