@@ -137,7 +137,7 @@ async function requestUpdate(map: maplibregl.Map) {
 		const response = await request.json();
 		states = response.ac;
 	} catch (error) {
-		console.warn("[map/states] could not parse states data returned by opensky");
+		console.warn("[map/states] could not parse states data returned by airplanes.live");
 		return;
 	}
 
@@ -165,7 +165,7 @@ function mapView() {
 
 	renderMap().then(map => {
 		map.once("load", () => {
-			map.on("move", () => requestAnimation(map));
+			map.on("moveend", () => requestAnimation(map));
 		});
 
 		setInterval(() => requestUpdate(map), 1000);
