@@ -175,7 +175,8 @@ function mapView() {
 		map.once("load", () => {
 			map.on("move", () => requestAnimation(map));
 		});
-		setTimeout(() => requestUpdate(map), 1000);
+
+		setInterval(() => requestUpdate(map), 1000);
 	});
 }
 
