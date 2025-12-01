@@ -84,20 +84,14 @@ async function renderMap() {
 	return map;
 }
 
-function updateCanvas(map: maplibregl.Map) {
+async function relevantStates(map: maplibregl.Map) {
 	const { _ne: ne, _sw: sw } = map.getBounds();
-
-	const canvas = getCanvas();
-	const ctx = canvas.getContext("2d");
-
-	const width = canvas.width;
-	const height = canvas.height;
-
-	ctx.clearRect(0, 0, width, height);
-
 	const images = loadImages();
+	const all_hex = Object.keys(all_states);
 
-	Object.keys(all_states).forEach(async hex => {
+	const relevant_images: Array<[Image, int, int]> = [];
+
+	for (const hex of all_hex) {
 		const state = all_states[hex];
 		
 		if (sw.lng < state.lon && state.lon < ne.lng && sw.lat < state.lat && state.lat < ne.lat) {
@@ -112,19 +106,35 @@ function updateCanvas(map: maplibregl.Map) {
 			const pct_lng = rel_lng / lng_range;
 			const pct_lat = rel_lat / lat_range;
 
-			const x = pct_lng * width;
-			const y = pct_lat * height;
+			// double window size for max coordinates for dpi
+			const x = pct_lng * window.innerWidth * 2;
+			const y = pct_lat * window.innerHeight * 2;
 
 			let track_rounded = Math.round(state.track / 10);
 			if (track_rounded === 36) track_rounded = 0
 
-			ctx.drawImage(await images.at(track_rounded), x, y, 50, 50);
-		}	
+			relevant_images.push([await images.at(track_rounded), x, y]);
+		}
+	}
+
+	return relevant_images;
+}
+
+async function updateCanvas(map: maplibregl.Map) {
+	const images = await relevantStates(map);
+
+	const canvas = getCanvas();
+	const ctx = canvas.getContext("2d");
+
+	ctx.clearRect(0, 0, window.innerWidth * 2, window.innerHeight * 2);
+
+	images.forEach(parameters => {
+		ctx.drawImage(parameters.at(0), parameters.at(1), parameters.at(2), 50, 50)
 	});
 }
 
 function requestAnimation(map: maplibregl.Map) {
-	window.requestAnimationFrame(() => updateCanvas(map));
+	window.requestAnimationFrame(() => void updateCanvas(map));
 }
 
 async function requestUpdate(map: maplibregl.Map) {
@@ -168,7 +178,8 @@ function mapView() {
 			map.on("moveend", () => requestAnimation(map));
 		});
 
-		setInterval(() => requestUpdate(map), 1000);
+		requestUpdate(map);
+		setInterval(() => requestUpdate(map), 2000);
 	});
 }
 
