@@ -2,14 +2,33 @@ import getCanvas from "./init";
 import { getStates } from "../states";
 import loadImages from "../svg";
 
-async function relevantStates(map: maplibregl.Map) {
+interface PlaneGraphicsState {
+	hex: string;
+	x: int;
+	y: int;
+}
+
+const graphics_states: Array<PlaneGraphicsState> = [];
+
+function graphicsStates() {
+	return graphics_states;
+}
+
+// todo: center plane image at position
+
+const relevant_images: Array<[Image, int, int]> = [];
+
+async function relevantStates(map: maplibregl.Map, use_cached: boolean) {
+	if (use_cached) return relevant_images;
+
 	const { _ne: ne, _sw: sw } = map.getBounds();
 	const images = loadImages();
 
 	const all_states = getStates();
 	const all_hex = Object.keys(all_states);
 
-	const relevant_images: Array<[Image, int, int]> = [];
+	graphics_states.length = 0;
+	relevant_images.length = 0;
 
 	for (const hex of all_hex) {
 		const state = all_states[hex];
@@ -27,21 +46,27 @@ async function relevantStates(map: maplibregl.Map) {
 			const pct_lat = rel_lat / lat_range;
 
 			// double window size for max coordinates for dpi
-			const x = pct_lng * window.innerWidth * 2;
-			const y = pct_lat * window.innerHeight * 2;
+			const x = pct_lng * window.innerWidth;
+			const y = pct_lat * window.innerHeight;
 
 			let track_rounded = Math.round(state.track / 10);
 			if (track_rounded === 36) track_rounded = 0
 
-			relevant_images.push([await images.at(track_rounded), x, y]);
+			graphics_states.push({
+				hex: state.hex,
+				x,
+				y
+			});
+
+			relevant_images.push([await images.at(track_rounded), x * 2, y * 2]);
 		}
 	}
 
 	return relevant_images;
 }
 
-async function updateCanvas(map: maplibregl.Map) {
-	const images = await relevantStates(map);
+async function updateCanvas(map: maplibregl.Map, use_cached: boolean) {
+	const images = await relevantStates(map, use_cached);
 
 	const canvas = getCanvas();
 	const ctx = canvas.getContext("2d");
@@ -53,8 +78,9 @@ async function updateCanvas(map: maplibregl.Map) {
 	});
 }
 
-function requestUpdate(map: maplibregl.Map) {
-	window.requestAnimationFrame(() => void updateCanvas(map));
+function requestUpdate(map: maplibregl.Map, use_cached: boolean = false) {
+	window.requestAnimationFrame(() => void updateCanvas(map, use_cached));
 }
 
+export { graphicsStates };
 export default requestUpdate;

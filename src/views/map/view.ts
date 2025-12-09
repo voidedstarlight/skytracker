@@ -1,4 +1,5 @@
 import { beginAnimation, endAnimation } from "./canvas/transform";
+import { click, pointerMove } from "./mouse";
 import getCanvas from "./canvas/init";
 import getContent from "../../layout";
 import maplibregl from "maplibre-gl";
@@ -23,6 +24,9 @@ async function renderMap() {
 		style: map_style,
 		zoom: 4
 	});
+
+	map_container.addEventListener("mousedown", click);
+	map_container.addEventListener("mousemove", event => pointerMove(map, event));
 
 	return map;
 }

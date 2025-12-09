@@ -17,7 +17,7 @@ function createCanvas() {
 
 	resizeCanvas(canvas);
 	window.addEventListener("resize", () => resizeCanvas(canvas));
-
+	
 	return canvas;
 }
 
