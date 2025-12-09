@@ -50,7 +50,7 @@ function getStates() {
 }
 
 async function refreshStates(map: maplibregl.Map) {
-	const { lat, lng  } = map.getCenter();
+	const { lat, lng } = map.getCenter();
 	const request = await fetch(`https://api.airplanes.live/v2/point/${lat}/${lng}/250`);
 
 	let states: Array<PlaneState> = [];
@@ -68,6 +68,8 @@ async function refreshStates(map: maplibregl.Map) {
 	});
 
 	requestUpdate(map);
+
+	setTimeout(() => refreshStates(map), 2000);
 }
 
 export { getStates };

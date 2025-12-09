@@ -1,3 +1,4 @@
+import { beginAnimation, endAnimation } from "./canvas/transform";
 import getCanvas from "./canvas/init";
 import getContent from "../../layout";
 import maplibregl from "maplibre-gl";
@@ -32,11 +33,11 @@ function mapView() {
 
 	renderMap().then(map => {
 		map.once("load", () => {
-			map.on("moveend", () => requestUpdate(map));
+			map.on("movestart", () => beginAnimation(map))
+			map.on("moveend", () => endAnimation(map));
 		});
 
 		refreshStates(map);
-		setInterval(() => refreshStates(map), 2000);
 	});
 }
 
