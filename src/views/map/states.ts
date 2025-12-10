@@ -45,11 +45,15 @@ interface PlaneState {
 
 const all_states: Record<string, PlaneState> = {};
 
+let current_timeout: int;
+
 function getStates() {
 	return all_states;
 }
 
 async function refreshStates(map: maplibregl.Map) {
+	current_timeout = setTimeout(() => refreshStates(map), 2500);
+
 	const { lat, lng } = map.getCenter();
 	const request = await fetch(`https://api.airplanes.live/v2/point/${lat}/${lng}/250`);
 
@@ -67,10 +71,17 @@ async function refreshStates(map: maplibregl.Map) {
 		all_states[plane.hex] = plane;
 	});
 
-	requestUpdate(map);
-
-	setTimeout(() => refreshStates(map), 2000);
+	if (isRunning) requestUpdate(map);	
 }
 
-export { getStates };
+function stopTimeout() {
+	window.clearTimeout(current_timeout);
+	current_timeout = null;
+}
+
+function isRunning() {
+	return current_timeout !== null;
+}
+
+export { getStates, stopTimeout, isRunning };
 export default refreshStates;

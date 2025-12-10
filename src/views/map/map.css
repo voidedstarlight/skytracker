@@ -12,3 +12,17 @@
 	z-index: 1;
 }
 
+.map-button {
+	backdrop-filter: blur(3px);
+	background-color: #fff4;
+	border-radius: 8px;
+	color: #555;
+	font-size: 0.7rem;
+	padding: 0.5rem 0.7rem;
+	transition: 200ms box-shadow, 200ms background-color;
+	z-index: 1;
+
+	&:hover {
+		box-shadow: 0 0 5px 5px #0001;
+	}
+}

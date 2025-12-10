@@ -3,8 +3,9 @@ import { click, pointerMove } from "./mouse";
 import getCanvas from "./canvas/init";
 import getContent from "../../layout";
 import maplibregl from "maplibre-gl";
-import refreshStates from "./states";
-import requestUpdate from "./canvas/update";
+import navigate from "../../route";
+import refreshStates, { stopTimeout } from "./states";
+import registerDeinit from "../../deinit";
 
 async function renderMap() {
 	void import("maplibre-gl/dist/maplibre-gl.css");
@@ -32,6 +33,8 @@ async function renderMap() {
 }
 
 function mapView() {
+	void import("./view.css");
+
 	const content = getContent();
 	const canvas = getCanvas();
 
@@ -41,8 +44,16 @@ function mapView() {
 			map.on("moveend", () => endAnimation(map));
 		});
 
+		registerDeinit(stopTimeout);
 		refreshStates(map);
 	});
+
+	const user_button = document.createElement("button");
+	content.appendChild(user_button);
+	user_button.innerText = "Log In";
+	user_button.classList.add("map-button", "user-button");
+
+	user_button.addEventListener("click", () => navigate("auth"));
 }
 
 export default mapView;
