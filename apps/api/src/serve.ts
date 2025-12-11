@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import fastifyStatic from "@fastify/static";
 import { join } from "path";
+import { readFileSync } from "fs";
 
 const server = Fastify.fastify({
 	logger: {
@@ -12,8 +13,13 @@ const server = Fastify.fastify({
 });
 
 server.register(fastifyStatic, {
-	prefix: "/",
+	prefix: "/a",
 	root: join(__dirname, "public")
+});
+
+server.get("*", (_, reply) => {
+	void reply.type("text/html");
+	return readFileSync(join(__dirname, "public/index.html"));
 });
 
 server.listen({

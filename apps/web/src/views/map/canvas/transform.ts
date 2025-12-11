@@ -1,4 +1,3 @@
-import { isRunning } from "../states";
 import requestUpdate from "./update";
 
 let ne: [float, float];
@@ -17,7 +16,7 @@ function beginAnimation(map: maplibregl.Map) {
 
 function endAnimation(map: maplibregl.Map) {
 	window.cancelAnimationFrame(request);
-	if (isRunning()) requestUpdate(map);
+	requestUpdate(map);
 }
 
 export { beginAnimation, endAnimation };
