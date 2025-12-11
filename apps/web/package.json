@@ -1,0 +1,13 @@
+{
+	"devDependencies": {
+		"@rspack/cli": "^1.5.8",
+		"@rspack/core": "^1.5.8"
+	},
+	"name": "@skytracker/web",
+	"license": "MIT",
+	"scripts": {
+		"build": "rspack build",
+		"dev": "rspack build -w"
+	},
+	"version": "0.0.1"
+}

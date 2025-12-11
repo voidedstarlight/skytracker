@@ -3,16 +3,20 @@
 		"maplibre-gl": "^5.13.0"
 	},
 	"devDependencies": {
-		"@rspack/cli": "^1.6.4",
-		"@rspack/core": "^1.6.4",
+		"@tsconfig/node24": "^24.0.1",
 		"@tsconfig/recommended": "^1.0.10",
-		"@types/node": "^24.9.1"
+		"@typescript/native-preview": "^7.0.0-dev.20251210.1",
+		"@types/node": "^24.9.1",
+		"concurrently": "^9.2.1",
+		"tsc-watch": "^7.2.0"
 	},
 	"name": "skytracker",
 	"license": "MIT",
 	"scripts": {
-		"dev": "rspack dev",
-		"build": "rspack build"
+		"dev:api": "npm run dev -w @skytracker/api",
+		"dev:web": "npm run dev -w @skytracker/web",
+		"dev": "concurrently -n 'API,WEB' -c 'bgBlue.black,bgMagentaBright.black' 'npm run dev:api' 'npm run dev:web'"
 	},
-	"version": "0.0.1"
+	"version": "0.0.1",
+	"workspaces": ["apps/*"]
 }

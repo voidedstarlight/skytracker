@@ -66,7 +66,6 @@ async function relevantStates(map: maplibregl.Map, use_cached: boolean) {
 }
 
 async function updateCanvas(map: maplibregl.Map, use_cached: boolean) {
-	console.log("updateCanvas");
 	const images = await relevantStates(map, use_cached);
 
 	const canvas = getCanvas();
