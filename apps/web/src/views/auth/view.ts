@@ -1,24 +1,22 @@
-import auth_client from "../../auth";
+import getSession, { authGeneric } from "../../auth";
 
-function signUp() {
-	auth_client.signUp.email({
-		email: "a@a.com",
-		password: "abcdef",
-		name: "a@a.com",
-  }).then((data, error) => {
-		if (error) {
-			console.warn("[auth] error in authenticating");
-			console.warn(error);
+function authView() {
+	void getSession().then(async data => {
+		if (data) {
+			document.location = "/dash?login=2";
 			return;
 		}
 
-		console.log(data);
+		const auth_result = await authGeneric("a@a.com", "abcdef");
+
+		if (auth_result === 0) {
+			document.location = "/dash?login=1";
+			return;
+		}
+
+		console.error("[auth] failed to authenticate");
+		console.error(auth_result);
 	});
-
-}
-
-function authView() {
-	console.log("auth");
 }
 
 export default authView;
