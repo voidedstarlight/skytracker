@@ -40,15 +40,15 @@ export default {
 			}
 		]
 	},
+	output: {
+		path: resolve(process.cwd(), "../../dist/public"),
+		publicPath: "/a/"
+	},
 	plugins: [
 		new rspack.HtmlRspackPlugin({
 			template: "./src/index.html"
 		})
 	],
-	output: {
-		path: resolve(process.cwd(), "../../dist/api/public"),
-		publicPath: "/a/"
-	},
 	resolve: {
 		extensions: [".js", ".ts", ".json"]
 	}

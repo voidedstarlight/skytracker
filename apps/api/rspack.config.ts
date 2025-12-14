@@ -1,36 +1,24 @@
+import Dotenv from "dotenv-webpack";
 import { resolve } from "path";
 import { rspack } from "@rspack/core";
 
 export default {
 	entry: {
-		main: "./src/route.ts"
+		main: "./src/serve.ts"
 	},
-	experiments: {
-		css: true
+	externals: {
+		"node:fs": "commonjs fs",
+		"node:crypto": "commonjs crypto",
+		"argon2": "argon2",
+		"pino": "pino",
+		"thread-stream": "thread-stream",
+		"pino-worker": "pino-worker",
+		"pino-file": "pino-file",
+		"pino-pretty": "pino-pretty"
 	},
 	externalsType: "commonjs",
-	devServer: {
-		hot: false,
-		liveReload: false,
-	},
 	module: {
 		rules: [
-			{
-				test: /\.css$/,
-				use: [
-					{
-						loader: "builtin:lightningcss-loader",
-						options: {
-							targets: ">0.5%"
-						}
-					}
-				],
-				type: "css/auto"
-			},
-			{
-				test: /\.svg$/,
-				type: "asset"
-			},
 			{
 				test: /\.ts$/,
 				exclude: [/node_modules/],
@@ -48,12 +36,15 @@ export default {
 			}
 		]
 	},
-	plugins: [
-		new rspack.HtmlRspackPlugin({ template: "./src/index.html" })
-	],
 	output: {
-		path: resolve(process.cwd(), "../dist")
+		path: resolve(process.cwd(), "../../dist"),
 	},
+	plugins: [
+		new Dotenv({
+			path: "../../.env"
+		})
+	],
+	target: "node",
 	resolve: {
 		extensions: [".js", ".ts", ".json"]
 	}
