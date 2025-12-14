@@ -11,6 +11,7 @@ const env = {
 };
 
 const auth = betterAuth({
+	basePath: "/A/auth",
 	baseURL: process.env.BETTER_AUTH_URL,
 	database: new Pool({
 		connectionString: `postgres://${env.user}:${env.pass}@${env.host}:${env.port}/${env.name}?${env.options}`
@@ -24,4 +25,29 @@ const auth = betterAuth({
 	secret: process.env.BETTER_AUTH_SECRET
 });
 
-export default auth;
+async function routeHandler(server, request, reply) {
+	try {
+    const url = new URL(request.url, `http://${request.headers.host}`);
+      
+    const standard_request = new Request(url.toString(), {
+      method: request.method,
+			headers: new Headers(request.headers),
+      body: request.body ? JSON.stringify(request.body) : undefined,
+		});
+
+    const auth_data = await auth.handler(standard_request);
+
+    reply.status(auth_data.status);
+    auth_data.headers.forEach((value, key) => reply.header(key, value));
+    reply.send(auth_data.body ? await auth_data.text() : null);
+
+	} catch (err) {
+    server.log.warn("[/A/auth] error in authentication procedure");
+		server.log.warn(err);
+    reply.status(400).send();
+  }
+}
+
+// [todo] cors
+
+export default routeHandler;

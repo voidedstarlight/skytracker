@@ -1,8 +1,8 @@
-import auth from "./auth";
 import Fastify from "fastify";
 import fastifyStatic from "@fastify/static";
 import { join } from "path";
 import { readFileSync } from "fs";
+import routeHandler from "./auth";
 
 const server = Fastify.fastify({
 	logger: {
@@ -18,62 +18,10 @@ server.register(fastifyStatic, {
 	root: join(__dirname, "public")
 });
 
-server.post("/A/register", {
-	schema: {
-		body: {
-			additionalProperties: false,
-			type: "object",
-			properties: {
-				email: { type: "string" },
-				name: { type: "string" },
-				password: { type: "string" }
-			},
-			required: ["email", "name", "password"]
-		}
-	}
-}, async (request, reply) => {
-	try {
-		// [todo] remove auth_data variable
-		const auth_data = await auth.api.signUpEmail({
-			body: {
-				email: request.body.email,
-				name: request.body.name,
-				password: request.body.password
-			}
-		});
-	
-		console.log(auth_data);
-		reply.send();
-	} catch (err) {
-		server.log.warn("[/A/register] auth error");
-		server.log.warn(err);
-		reply.status(400).send();
-	}
-});
-
-server.post("/A/authenticate", {
-	schema: {
-		body: {
-			additionalProperties: false,
-			type: "object",
-			properties: {
-				email: { type: "string" },
-				password: { type: "string" }
-			},
-			required: ["email", "password"]
-		}
-	}
-}, async (request, reply) => {
-	const auth_data = await auth.api.signInEmail({
-		body: {
-			email: request.body.email,
-			password: request.body.password
-		}
-	});
-
-	console.log(auth_data);
-
-	reply.send()
+server.route({
+	method: ["GET", "POST"],
+	url: "/A/auth/*",
+	handler: (request, reply) => routeHandler(server, request, reply)
 });
 
 server.get("*", (_, reply) => {
