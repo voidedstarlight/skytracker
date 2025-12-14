@@ -42,6 +42,9 @@ export default {
 	plugins: [
 		new Dotenv({
 			path: "../../.env"
+		}),
+		new rspack.IgnorePlugin({
+			resourceRegExp: /pg-native/
 		})
 	],
 	target: "node",
