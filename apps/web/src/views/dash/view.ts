@@ -1,3 +1,5 @@
+import createMap from "../../components/map/component";
+import getContent from "../../layout";
 import renderNotif from "../../notif";
 
 function parseParams() {
@@ -16,8 +18,13 @@ function parseParams() {
 
 function dashView() {
 	parseParams();
+	const content = getContent();
 
+	const container = document.createElement("div");
+	content.appendChild(container);
+	container.classList.add("map");
 
+	const map = createMap(container);
 }
 
 export default dashView;
