@@ -39,7 +39,7 @@ async function authGeneric(email: string, password: string): string | 0 {
 		if (error.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") return signIn(email, password);
 
 		console.warn("[auth] failed to sign up");
-		return error.code;
+		return error.code ?? error.status;
 	}
 
 	return 0;

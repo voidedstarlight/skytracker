@@ -44,9 +44,7 @@ function renderForm() {
 			return;
 		}
 
-		console.error("[auth] failed to authenticate");
-		console.error(auth_result);
-
+		console.warn("[auth] failed to authenticate");
 		showError(form, auth_result);
 	});
 
