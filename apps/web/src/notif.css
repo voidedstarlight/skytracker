@@ -1,0 +1,43 @@
+#notif-container {
+	bottom: 1rem;
+	display: flex;
+	flex-direction: column;
+	font-size: 0.9rem;
+	gap: 0.8rem;
+	position: absolute;
+	right: 1rem;
+
+	p {
+		animation: 200ms ease-in forwards fade-in;
+		background-color: #222;
+		border: 1px solid #555;
+		border-radius: 5px;
+		color: white;
+		padding: 0.6rem 0.9rem;
+
+		&.level-1 {
+			background-color: #1e2b20;
+			border-color: #80ca80;
+		}
+
+		&.level1 {
+			background-color: #241d1a;
+			border-color: #b98f76;
+		}
+
+		&.level2 {
+			background-color: #1e0d0d;
+			border-color: #a25757;
+		}
+	}
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
