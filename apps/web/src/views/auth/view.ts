@@ -1,5 +1,19 @@
 import getContent from "../../layout";
 import getSession, { authGeneric } from "../../auth";
+import auth_errors from "./errors.json";
+
+function renderError(form: HTMLElement) {
+	const error_element = document.createElement("p");
+	form.appendChild(error_element);
+	error_element.id = "auth-error";
+
+	return error_element;
+}
+
+function showError(form: HTMLElement, message: string) {
+	const error_element = document.getElementById("auth-error") ?? renderError(form);
+	error_element.innerText = auth_errors[message] ?? message;
+}
 
 function renderForm() {
 	void import("./view.css");
@@ -33,7 +47,17 @@ function renderForm() {
 		console.error("[auth] failed to authenticate");
 		console.error(auth_result);
 
+		showError(form, auth_result);
 	});
+
+	email_input.addEventListener("keydown", event => {
+		if (event.key === "Enter" || event.key === "NumpadEnter") confirm.click();
+	});
+
+	password_input.addEventListener("keydown", event => {
+		if (event.key === "Enter" || event.key === "NumpadEnter") confirm.click();
+	});
+
 }
 
 function authView() {

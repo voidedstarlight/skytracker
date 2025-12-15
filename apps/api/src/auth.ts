@@ -17,7 +17,6 @@ const auth = betterAuth({
 		connectionString: `postgres://${env.user}:${env.pass}@${env.host}:${env.port}/${env.name}?${env.options}`
 	}),
 	emailAndPassword: {
-		autoSignIn: false,
 		enabled: true,
 		minPasswordLength: 1,
 		requireEmailVerification: false

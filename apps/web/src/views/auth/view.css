@@ -17,7 +17,7 @@ main {
 	gap: 1rem;
 	width: 20rem;
 
-	input, button {
+	* {
 		border: 1px solid #333;
 		border-radius: 5px;
 		box-shadow: 0 0 0 3px transparent;
@@ -47,4 +47,12 @@ main {
 			box-shadow: 0 0 0 3px #444;
 		}
 	}
+}
+
+#auth-error {
+	background-color: #1e0707;
+	border-color: #401b1b;
+	font-size: 0.8rem;
+	line-height: 1.35rem;
+	margin: 0;
 }

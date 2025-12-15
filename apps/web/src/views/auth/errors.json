@@ -1,0 +1,5 @@
+{
+	"INVALID_EMAIL": "Invalid email address\nMake sure the value is formatted correctly",
+	"INVALID_EMAIL_OR_PASSWORD": "Incorrect password\nTo create a new account, enter another email that is not already in use",
+	"PASSWORD_TOO_SHORT": "Enter a password to log in or sign up"
+}

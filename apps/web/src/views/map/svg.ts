@@ -1,6 +1,6 @@
-import json from "./images.json";
+import image_data from "./images.json";
 
-const image_url = json.plane;
+const image_url = image_data.plane;
 
 function loadSVG(angle: int) {
 	const image = new Image();
