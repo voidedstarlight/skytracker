@@ -16,6 +16,8 @@ function parseParams() {
 
 function dashView() {
 	parseParams();
+
+
 }
 
 export default dashView;
