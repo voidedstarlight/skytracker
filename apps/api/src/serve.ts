@@ -2,6 +2,7 @@ import Fastify from "fastify";
 import fastifyStatic from "@fastify/static";
 import { join } from "path";
 import { readFileSync } from "fs";
+import registerRoutes from "./flights";
 import routeHandler from "./auth";
 
 const server = Fastify.fastify({
@@ -23,6 +24,8 @@ server.route({
 	url: "/A/auth/*",
 	handler: (request, reply) => routeHandler(server, request, reply)
 });
+
+registerRoutes(server);
 
 server.get("*", (_, reply) => {
 	void reply.type("text/html");

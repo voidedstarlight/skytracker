@@ -1,21 +1,10 @@
 import { betterAuth } from "better-auth";
-import { Pool } from "pg";
-
-const env = {
-	host: process.env.POSTGRES_HOST,
-	name: process.env.POSTGRES_NAME,
-	options: process.env.POSTGRES_OPTIONS,
-	pass: process.env.POSTGRES_PASS,
-	port: process.env.POSTGRES_PORT,
-	user: process.env.POSTGRES_USER
-};
+import db_pool from "./db";
 
 const auth = betterAuth({
 	basePath: "/A/auth",
 	baseURL: process.env.BETTER_AUTH_URL,
-	database: new Pool({
-		connectionString: `postgres://${env.user}:${env.pass}@${env.host}:${env.port}/${env.name}?${env.options}`
-	}),
+	database: db_pool,
 	emailAndPassword: {
 		enabled: true,
 		minPasswordLength: 1,
