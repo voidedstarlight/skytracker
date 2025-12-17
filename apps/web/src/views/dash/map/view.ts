@@ -1,5 +1,6 @@
 import createMap from "../../../components/map/component";
 import getContent from "../../../layout";
+import createSidebar from "../../../components/sidebar/component";
 import renderNotif from "../../../notif";
 
 function parseParams() {
@@ -16,30 +17,13 @@ function parseParams() {
 	}
 }
 
-function createSidebar(container: HTMLElement) {
-	const sidebar = document.createElement("aside");
-	container.appendChild(sidebar);
-
-	const map_button = document.createElement("button");
-	sidebar.appendChild(map_button);
-	map_button.innerText = "Map";
-
-	const statistics_button = document.createElement("button");
-	sidebar.appendChild(statistics_button);
-	statistics_button.innerText = "Statistics";
-}
-
 function dashMapView() {
 	parseParams();
 
 	const content = getContent();
-	createSidebar(content);
+	void createMap(content);
 
-	const container = document.createElement("div");
-	content.appendChild(container);
-	container.classList.add("map");
-
-	const map = createMap(container);
+	createSidebar();
 }
 
 export default dashMapView;
