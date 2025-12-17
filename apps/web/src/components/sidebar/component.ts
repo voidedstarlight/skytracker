@@ -15,9 +15,19 @@ function createSidebar() {
 	sidebar.appendChild(map_button);
 	map_button.innerText = "Map";
 
-	const statistics_button = document.createElement("button");
-	sidebar.appendChild(statistics_button);
-	statistics_button.innerText = "Statistics";
+	map_button.addEventListener("click", () => document.location = "/dash/map");
+
+	const stats_button = document.createElement("button");
+	sidebar.appendChild(stats_button);
+	stats_button.innerText = "Statistics";
+
+	stats_button.addEventListener("click", () => document.location = "/dash/stats");
+
+	const log_button = document.createElement("button");
+	sidebar.appendChild(log_button);
+	log_button.innerText = "Log Flight";
+
+	log_button.addEventListener("click", () => document.location = "/dash/log");
 
 	sidebar.addEventListener("animationend", () => {
 		if (opened) sidebar.classList.remove("open");

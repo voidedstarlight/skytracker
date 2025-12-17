@@ -5,8 +5,7 @@ aside {
 	gap: 0.8rem;
 	height: 100svh;
 	left: 0;
-	padding: 0.8rem;
-	padding-top: 3.5rem;
+	padding: 0 0.8rem;
 	mask: linear-gradient(to right, black 70%, transparent);
 	position: absolute;
 	top: 0;
@@ -31,6 +30,15 @@ aside {
 		margin-right: 25%;
 		padding: 0.5rem 0.8rem;
 		text-align: left;
+
+		&:first-child {
+			margin-top: 3.5rem;
+		}
+
+		&:last-child {
+			margin-top: auto;
+			margin-bottom: 0.8rem;
+		}
 	}
 }
 
