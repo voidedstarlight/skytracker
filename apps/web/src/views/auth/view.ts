@@ -40,7 +40,7 @@ function renderForm() {
 		const auth_result = await authGeneric(email_input.value, password_input.value);
 
 		if (auth_result === 0) {
-			document.location = "/dash?login=1";
+			document.location = "/dash/map?login=1";
 			return;
 		}
 
@@ -61,7 +61,7 @@ function renderForm() {
 function authView() {
 	void getSession().then(data => {
 		if (data) {
-			document.location = "/dash?login=2";
+			document.location = "/dash/map?login=2";
 			return;
 		}
 

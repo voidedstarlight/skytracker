@@ -1,6 +1,6 @@
-import createMap from "../../components/map/component";
-import getContent from "../../layout";
-import renderNotif from "../../notif";
+import createMap from "../../../components/map/component";
+import getContent from "../../../layout";
+import renderNotif from "../../../notif";
 
 function parseParams() {
 	void import("./view.css");
@@ -29,7 +29,7 @@ function createSidebar(container: HTMLElement) {
 	statistics_button.innerText = "Statistics";
 }
 
-function dashView() {
+function dashMapView() {
 	parseParams();
 
 	const content = getContent();
@@ -42,4 +42,4 @@ function dashView() {
 	const map = createMap(container);
 }
 
-export default dashView;
+export default dashMapView;

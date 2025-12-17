@@ -1,5 +1,6 @@
 import authView from "./views/auth/view";
-import dashView from "./views/dash/view";
+import dashMapView from "./views/dash/map/view";
+import dashStatsView from "./views/dash/stats/view";
 import mapView from "./views/map/view";
 
 import "./layout.css";
@@ -7,7 +8,8 @@ import "./layout.css";
 const VIEWS = {
 	"/": mapView,
 	"/auth": authView,
-	"/dash": dashView
+	"/dash/map": dashMapView,
+	"/dash/stats": dashStatsView
 };
 
 function loadView() {
