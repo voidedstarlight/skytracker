@@ -40,9 +40,18 @@ export default {
 			}
 		]
 	},
+	optimization: {
+		splitChunks: {
+			minSize: 0,
+		}
+	},
 	output: {
 		path: resolve(process.cwd(), "../../dist/public"),
 		publicPath: "/a/"
+	},
+	performance: {
+		maxAssetSize:      2000000,
+		maxEntrypointSize: 2000000
 	},
 	plugins: [
 		new rspack.HtmlRspackPlugin({

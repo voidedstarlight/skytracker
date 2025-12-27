@@ -15,6 +15,9 @@
 	"name": "skytracker",
 	"license": "MIT",
 	"scripts": {
+		"build:api": "npm run build -w @skytracker/api",
+		"build:web": "npm run build -w @skytracker/web",
+		"build": "npm run build:api && npm run build:web",
 		"dev:api": "npm run dev -w @skytracker/api",
 		"dev:web": "npm run dev -w @skytracker/web",
 		"dev": "concurrently -n 'API,WEB' -c 'bgBlue.black,bgMagentaBright.black' 'npm run dev:api' 'npm run dev:web' & nodemon dist/main.js"
