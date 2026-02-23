@@ -10,7 +10,7 @@
 		"@typescript/native-preview": "^7.0.0-dev.20260114.1",
 		"@types/node": "^25.0.8",
 		"concurrently": "^9.2.1",
-		"nodemon": "^3.1.11"
+		"nodemon": "^3.1.14"
 	},
 	"name": "skytracker",
 	"license": "MIT",
